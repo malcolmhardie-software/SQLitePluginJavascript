@@ -38,7 +38,7 @@
 		<array>
 			<dict>
 				<key>name</key>
-				<string>HTML Report</string>
+				<string>Example HTML Report</string>
 				<key>fileType</key>
 				<string>html</string>
 			</dict>
