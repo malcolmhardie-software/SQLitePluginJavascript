@@ -18,7 +18,6 @@
 		DEC3C8371CCEC4C30096181B /* report.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = report.js; sourceTree = "<group>"; };
 		DEC3C8381CCEC4C30096181B /* report.template */ = {isa = PBXFileReference; explicitFileType = text; path = report.template; sourceTree = "<group>"; };
 		DEC3C83D1CCEC4D30096181B /* SQLEditorJSPlugin.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SQLEditorJSPlugin.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		DEC3C8401CCEC4D40096181B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,7 +34,6 @@
 		DEC3C82D1CCEC49A0096181B = {
 			isa = PBXGroup;
 			children = (
-				DEC3C8341CCEC4BE0096181B /* Info.plist */,
 				DEC3C8351CCEC4C30096181B /* scripts */,
 				DEC3C83F1CCEC4D40096181B /* SQLEditorJSPlugin */,
 				DEC3C83E1CCEC4D30096181B /* Products */,
@@ -50,7 +48,7 @@
 				DEC3C8381CCEC4C30096181B /* report.template */,
 			);
 			name = scripts;
-			path = ../source/scripts;
+			path = source/scripts;
 			sourceTree = "<group>";
 		};
 		DEC3C83E1CCEC4D30096181B /* Products */ = {
@@ -64,7 +62,7 @@
 		DEC3C83F1CCEC4D40096181B /* SQLEditorJSPlugin */ = {
 			isa = PBXGroup;
 			children = (
-				DEC3C8401CCEC4D40096181B /* Info.plist */,
+				DEC3C8341CCEC4BE0096181B /* Info.plist */,
 			);
 			path = SQLEditorJSPlugin;
 			sourceTree = "<group>";
@@ -192,7 +190,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = SQLEditorJSPlugin/Info.plist;
+				INFOPLIST_FILE = source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -236,7 +234,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = SQLEditorJSPlugin/Info.plist;
+				INFOPLIST_FILE = source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -267,6 +265,7 @@
 				DEC3C8431CCEC4D40096181B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
