@@ -1,0 +1,322 @@
+{{!
+
+SQLEditor HTML Report template (handlebars.js)
+
+Copyright 2015 - MalcolmHardie Solutions Limited
+
+BSD License applies
+
+}}
+<!DOCTYPE html>
+<html>
+<!-- SQLEditor generated report -->
+<head>
+    <title>SQLEditor Report</title>
+    
+    
+    <style>
+
+
+body {
+
+font-family:Helvetica, sans-serif;
+font-size:90%;
+
+}
+
+table.dataTable {
+
+border-collapse:collapse;
+}
+
+table.dataTable th
+{
+
+/*        background:#CCC;*/
+color:black;
+font-weight:bold;
+}
+
+table.dataTable th, table.dataTable td {
+border: 1px solid #999;
+padding:0.25em;
+}
+
+.table_comments {
+border:1px solid gray;
+padding:0.25em;
+width:20em;
+}
+
+.table_comments h3 {
+font-size:medium;
+margin-top:2px;
+margin-bottom:2px;
+}
+
+.table_comments p {
+margin-top:0.25em;
+margin-bottom:0.25em;
+
+}
+
+.fieldOptions {
+list-style:none;
+padding-left:0px;
+margin:0px;
+}
+
+.fieldOptions li {
+display:inline-block;
+background:#ddd;
+padding:3px;
+border-radius:5px;
+margin-top:2px;
+font-size:small;
+}
+
+.objectTypeBlock {
+vertical-align:middle;
+background:#ccd;
+padding:3px;
+border-radius:5px;
+
+font-size:small;
+}
+
+.objectInformation th {
+text-align:left;
+width:10em;
+}
+
+.objectInformation{
+min-width:30em;
+}
+
+hr {
+border: 0;
+height: 1px;
+background-color:#999;
+}
+    </style>
+</head>
+<body>
+
+
+
+<h1>SQLEditor Generated HTML Report: {{documentInfo.documentName}} </h1>
+
+<h2>Table List</h2>
+
+<ol>
+{{#each objects }}
+{{#if_eq ClassType "SQLTable"}}
+
+<li><a href="#table_{{fullyQualifiedName}}">{{fullyQualifiedName}}</a></li>
+
+{{/if_eq}}
+
+{{/each~}}
+</ol>
+
+
+<h2>View List</h2>
+<ol>
+{{#each objects }}
+{{#if_eq ClassType "SQLView"}}
+<li><a href="#view_{{fullyQualifiedName}}">{{fullyQualifiedName}}</a></li>
+{{/if_eq}}
+{{/each~}}
+</ol>
+
+
+<hr>
+
+<h2>Tables</h2>
+<hr>
+{{#each objects }}
+{{#if_eq ClassType "SQLTable"}}
+<div class="TableSection">
+<a name="table_{{fullyQualifiedName}}" />
+
+<h2>{{fullyQualifiedName}} <span class="objectTypeBlock">Table</span></h2>
+
+
+<table class='dataTable columns objectInformation'>
+<tr><th>Object Type</th><td>Table</td></tr>
+<tr><th>Name</th><td>{{name}}</td></tr>
+<tr><th>Schema</th><td>{{schema}}</td></tr>
+<tr><th>Comment</th><td>{{comment}}</td></tr>
+</table>
+
+<h3> Columns</h3>
+
+ <table class='dataTable columns'>
+    <tr>
+        <th>Column Name</th><th>Data Type</th><th>Primary Key</th><th>Options</th><th>Comment</th>
+    </tr>
+
+
+    {{#each fields}}
+    <tr>
+        <td>{{name}}</td>
+        <td>{{type}}</td>
+        <td>{{#if primaryKey }}&#10004;{{/if}}</td>
+        <td><ul class="fieldOptions">
+
+
+
+        {{#if referencesField }}
+        <li>Foreign key</li>
+        {{/if}}
+
+        {{#if properties.autoIncrement }}
+        <li>Auto Increment</li>
+        {{/if}}
+
+        {{#if properties.notNull }}
+        <li>Not Null</li>
+        {{/if}}
+
+        {{#if properties.defaultValue }}
+        <li>Default Value: {{properties.defaultValue}}</li>
+        {{/if}}
+
+        {{#if properties.indexed }}
+        <li>Indexed</li>
+        {{/if}}
+
+        {{#if properties.unsigned }}
+        <li>Unsigned</li>
+        {{/if}}
+
+        {{#if properties.zerofill }}
+        <li>Zero Fill</li>
+        {{/if}}
+
+        {{#if properties.zerofill }}
+        <li>Zero Fill</li>
+        {{/if}}
+
+        {{#if properties.timeZone }}
+        <li>Date with Time Zone</li>
+        {{/if}}
+
+        </ul>
+        </td>
+        <td>{{comment}}</td>
+    </tr>
+    {{/each~}}
+</table>
+
+{{#if foreignKeys}}
+<h3>Foreign Keys</h3>
+ <table class='dataTable foreignkeys'>
+    <tr>
+        <th>Foreign Key Name</th><th>Source</th><th>Target</th>
+    </tr>
+
+    {{~#each foreignKeys }}
+    <tr>
+        <td>{{name}}</td>
+        <td>
+{{~#each fieldPairs}}
+{{sourceFieldName}} {{> optionalComma}}
+{{/each}}
+
+</td>
+<td><a href="#table_{{targetTableName}}">{{targetTableName}}</a>(
+{{~#each fieldPairs}}
+{{targetFieldName}} {{> optionalComma}}
+{{/each}})
+        </td>
+
+    </tr>
+
+    {{/each}}
+</table>
+{{/if}}
+
+{{#shouldShowIndexList this}}
+<h3>Indexes</h3>
+    <table class='dataTable indexes'>
+        <tr><th>Index Name</th><th>type</th><th>Comment</th><th>columns</th></tr>
+
+
+{{#if primaryKeyList }}
+    <tr>
+    <td>Primary Key</td>
+    <td>PK</td>
+    <td></td>
+    <td>{{primaryKeyList}}</td>
+    </tr>
+
+{{/if}}
+        
+{{~#each indexes }}
+    <tr>
+        <td>{{name}}</td>
+        <td>{{properties.indexType}}</td>
+        <td>{{comment}}</td>
+<td>{{~#each indexEntryList}}
+{{name}} {{> optionalComma}}
+{{/each}}
+
+</td>
+    </tr>
+{{/each}}
+
+
+</table>
+{{/shouldShowIndexList}}
+
+{{#if constraints}}
+<h3>Constraints</h3>
+<table class='dataTable constraints'>
+<tr><th>Constraint Name</th><th>type</th><th>Comment</th><th>columns</th></tr>
+
+
+
+{{~#each constraints }}
+<tr>
+<td>{{name}}</td>
+<td>{{properties.indexType}}</td>
+<td>{{comment}}</td>
+<td>{{~#each indexEntryList}}
+{{name}} {{> optionalComma}}
+{{/each}}
+
+</td>
+</tr>
+{{/each}}
+
+
+</table>
+{{/if}}
+
+
+</div>
+<hr>
+
+{{/if_eq}}
+
+{{/each}}
+
+
+
+<h2>Views</h2>
+<hr>
+    <table class='dataTable views'>
+<tr><th>Name</th><th>Query</th></tr>
+{{#each objects }}
+{{#if_eq ClassType "SQLView"}}
+<tr><td><a name="view_{{fullyQualifiedName}}">{{fullyQualifiedName}}</td><td>{{properties.queryString}}</td></tr>
+
+{{/if_eq}}
+{{/each}}
+
+</table>
+
+</body>
+
+</html>
