@@ -2,7 +2,7 @@
 Example Javascript based plugin for SQLEditor
 
 
-This project demonstrates how to write a simple export plugin for SQLEditor using Javascript.
+This project demonstrates how to write a simple export plugin for <a href="https://www.malcolmhardie.com/sqleditor/">SQLEditor</a> using Javascript.
 It is mostly the same as the bundled HTML Report plugin that ships with SQLEditor.
 
 By modifying the Info.plist file you can also make a report plugin (which adds entries to the Save as Report panel instead)
