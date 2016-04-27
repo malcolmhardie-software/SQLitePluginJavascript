@@ -49,6 +49,7 @@ You will need to hit the manual refresh button above the source view
 * Plugins can't do diff support yet
 * No database support
 * No import support
+* No dialect specific types list yet
 
 ### SQLEditor specific additions
 
