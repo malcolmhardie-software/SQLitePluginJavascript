@@ -87,6 +87,27 @@ function definePartials()
     
 }
 
+function exportContainerDiff(jsonContainer,compContainer)
+{
+    
+    var source = SQLEditorJS.contentsOfFile("report.template");
+    
+    
+    var template = Handlebars.compile(source);
+    
+    
+    var container = JSON.parse(jsonContainer);
+    
+    
+    
+    var result = template(container);
+    
+    
+    result = "#Diff is not yet supported by this plugin\n"+result;
+    
+    return result;
+    
+}
 
 
 
