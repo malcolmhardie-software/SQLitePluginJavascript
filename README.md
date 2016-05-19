@@ -8,7 +8,7 @@ This code is mostly the same as the bundled HTML Report plugin that ships with S
 
 The binary component in the plugin bundled with SQLEditor is to work around an obscure code signing issue and doesn't actually do anything.
 
-### Report instead or Export
+### Plugin Types: Report or Export
 
 Plugins are currently either export type or report type.
 
