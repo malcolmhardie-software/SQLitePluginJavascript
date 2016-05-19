@@ -38,8 +38,10 @@ I expect to add some helper functions to help with this in the next release.
 
 ### Building
 
-* Download the code and open the xcode project.
-* Build the plugin
+* Download the code
+* Install the SQLiteJSPlugin.bundle file
+
+(XCode is no longer used)
 
 ### Installing
 
