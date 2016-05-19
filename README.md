@@ -81,3 +81,16 @@ This method loads and returns the contents of the specified file, it should be l
 Please send suggestions, feedback or bug reports to support@malcolmhardie.com
 
 Suggestions on more ideomatic javascript or any other technical improvements are extremely welcome.
+
+
+### Changes 
+
+(See also the git history)
+
+2016-05-19
+* Added diff
+* Rearranged to be a valid plugin without requiring xcode
+
+
+
+

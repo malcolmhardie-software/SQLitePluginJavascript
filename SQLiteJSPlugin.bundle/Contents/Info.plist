@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>SQLite JS Plugin (SQLEditor)</string>
+	<string>SQLite JS Plugin</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
@@ -24,8 +24,8 @@
 	<string>Copyright © 2016 MalcolmHardie Solutions. All rights reserved.</string>
 	<key>SQLEditorPlugin</key>
 	<dict>
-        <key>supportsDiff</key>
-        <true/>
+		<key>supportsDiff</key>
+		<true/>
 		<key>variant</key>
 		<string>javascript</string>
 		<key>scriptFile</key>
