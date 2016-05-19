@@ -36,6 +36,8 @@ function init()
    
     SQLEditorJS.evaluate("handlebars-v3.0.3.js");
     
+    SQLEditorJS.evaluate("diff-functions.js");
+    
     Handlebars.registerHelper('if_eq', function(a, b, opts) {
                               if(a == b)
                               return opts.fn(this);
