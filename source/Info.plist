@@ -5,13 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
+	<string>sqlitejs</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.malcolmhardie.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<string>com.malcolmhardie.sqleditor.plugins.sqlitejs</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>SQLite JS Plugin (SQLEditor)</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
@@ -21,15 +21,17 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2015 MalcolmHardie Solutions. All rights reserved.</string>
+	<string>Copyright © 2016 MalcolmHardie Solutions. All rights reserved.</string>
 	<key>SQLEditorPlugin</key>
 	<dict>
+        <key>supportsDiff</key>
+        <true/>
 		<key>variant</key>
 		<string>javascript</string>
 		<key>scriptFile</key>
 		<string>report.js</string>
 		<key>name</key>
-		<string>SQLEditor Example Plugin</string>
+		<string>SQLite (JS)</string>
 		<key>exportIsUserDisplayable</key>
 		<true/>
 		<key>importTypes</key>
@@ -38,7 +40,7 @@
 		<array>
 			<dict>
 				<key>name</key>
-				<string>Example HTML Report</string>
+				<string>SQLite (JS)</string>
 				<key>fileType</key>
 				<string>html</string>
 			</dict>
