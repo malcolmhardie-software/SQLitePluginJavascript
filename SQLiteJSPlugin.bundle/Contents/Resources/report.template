@@ -7,17 +7,8 @@ Copyright 2016 - MalcolmHardie Solutions Limited
 BSD License applies
 
 }}
-
-
-
 # SQL file from SQLEditor
 # {{documentInfo.documentName}} 
-
-
-
-
-
-
 
 {{#each objects }}
 {{#if_eq ClassType "SQLTable"}}
@@ -30,7 +21,7 @@ CREATE TABLE {{fullyQualifiedName}}
     {{name}} {{type}}{{#unless @last}},{{/unless}}
     {{/each}}
 
-)
+);
 
 {{/if_eq}}
 {{/each}}
