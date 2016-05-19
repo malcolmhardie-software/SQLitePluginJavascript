@@ -23,6 +23,19 @@ The pure JS plugin consists of a bundle, an Info.plist file and some javascript.
 The Info.plist file specifies the main javascript file (under the **scriptFile** key) for the plugin.
 You can also evaluate other javscript files.
 
+
+### Diff
+
+For diff support you must add the **supportsDiff = YES** key value to the **SQLEditorPlugin** InfoPlist section. This example includes that.
+
+You then need to implement the method **exportContainerDiff** in your javascript plugin
+
+You get two json containers, the first is the current document, the second is the comparison document. 
+
+Currently you need to calculate which objects have been added and which removed by diffing these containers.
+
+I expect to add some helper functions to help with this in the next release.
+
 ### Building
 
 * Download the code and open the xcode project.
@@ -46,7 +59,6 @@ You will need to hit the manual refresh button above the source view
 
 ### Limtations
 
-* Plugins can't do diff support yet
 * No database support
 * No import support
 * No dialect specific types list yet
