@@ -22,9 +22,11 @@ CREATE TABLE {{fullyQualifiedName}}
     {{~#if primaryKey}} PRIMARY KEY{{/if}}
     {{~#if unique}} UNIQUE{{/if}}
     {{~#if properties.defaultValue}} DEFAULT "{{properties.defaultValue}}" {{/if}}
+    
+    {{~#if referencesField}}{{#if referencesTable}} REFERENCES {{referencesTable}}({{referencesField}}){{/if}}{{/if}}
+    
     {{~#unless @last}},{{/unless}}
     {{/each}}
-
 );
 
 {{/if_eq}}
