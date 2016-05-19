@@ -18,7 +18,11 @@ BSD License applies
 CREATE TABLE {{fullyQualifiedName}}
 (
     {{#each fields}}
-    {{name}} {{type}}{{#unless @last}},{{/unless}}
+    {{name}} {{type}} 
+    {{~#if primaryKey}} PRIMARY KEY{{/if}}
+    {{~#if unique}} UNIQUE{{/if}}
+    {{~#if properties.defaultValue}} DEFAULT "{{properties.defaultValue}}" {{/if}}
+    {{~#unless @last}},{{/unless}}
     {{/each}}
 
 );
