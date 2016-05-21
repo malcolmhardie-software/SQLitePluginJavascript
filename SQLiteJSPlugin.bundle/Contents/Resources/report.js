@@ -186,23 +186,34 @@ function definePartials()
     
 }
 
-function exportContainerDiff(jsonContainer,compContainer)
+function exportContainerDiff(jsonContainer,jsonCompContainer)
 {
     
-    var source = SQLEditorJS.contentsOfFile("report.template");
+    // var source = SQLEditorJS.contentsOfFile("report.template");
+    //
+    //
+    // var template = Handlebars.compile(source);
+    //
+    //
+    // var container = JSON.parse(jsonContainer);
+    //
+    //
+    //
+    // var result = template(container);
+    //
     
     
-    var template = Handlebars.compile(source);
     
+    
+    // result = "#Diff is not yet supported by this plugin\n"+result;
+    
+    
+    var exporter = new DiffExporter();
     
     var container = JSON.parse(jsonContainer);
+    var compContainer = JSON.parse(jsonCompContainer);
     
-    
-    
-    var result = template(container);
-    
-    
-    result = "#Diff is not yet supported by this plugin\n"+result;
+    var result = exporter.diffExport(container,compContainer);
     
     return result;
     
