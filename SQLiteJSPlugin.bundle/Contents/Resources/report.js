@@ -82,9 +82,28 @@ function init()
     
     Handlebars.registerHelper("fkColumnList", function(keyName,fk,opts) {
       
-        list = fk.fieldPairs;
+        var list = fk.fieldPairs;
       
-        if (list.count == 0) {
+        if (list.length == 0) {
+            return "";
+        }
+  
+        var result = list[0][keyName];
+    
+        for (i=1;i<list.length;i++) {
+        
+            result += ", "+list[i][keyName];
+        }
+        return result;
+    });
+    
+    Handlebars.registerHelper("indexColumnList", function(index,opts) {
+      
+        var list = index.indexEntryList
+        
+        var keyName = "name";
+      
+        if (list.length == 0) {
             return "";
         }
   
@@ -116,7 +135,7 @@ function commaSeparatedList(list)
   
     var result = list[0];
     
-    for (i=1;i<list.count;i++) {
+    for (i=1;i<list.length;i++) {
         
         result += ","+list[i];
     }

@@ -35,5 +35,13 @@ CREATE TABLE {{fullyQualifiedName}}
 {{/if_eq}}
 {{/each}}
 
-{{! add any table level foreign keys }}
-
+{{#each objects }}
+{{#if_eq ClassType "SQLTable"}}
+{{~#each indexes }}
+{{#if comment}}
+/* {{comment}} */
+{{/if}}
+CREATE INDEX {{name}} ON {{../fullyQualifiedName}} ({{indexColumnList .}});
+{{/each}}
+{{/if_eq}}
+{{/each}}
