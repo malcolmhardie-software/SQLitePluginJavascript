@@ -28,7 +28,7 @@ CREATE TABLE {{fullyQualifiedName}}
     {{~#if ../foreignKeys}},{{else}}{{~#unless @last}},{{/unless}}{{/if}}    
     {{/each}}
     {{#each foreignKeys}}
-    FOREIGN KEY ({{~#each fieldPairs}}{{sourceFieldName}}{{~#unless @last}}, {{/unless}}{{/each~}}) REFERENCES {{targetTableName}} ({{~#each fieldPairs}}{{targetFieldName}}{{~#unless @last}}, {{/unless}}{{/each~}}){{~#unless @last}},{{/unless}}
+    FOREIGN KEY ({{fkColumnList "sourceFieldName" .}}) REFERENCES {{targetTableName}} ({{fkColumnList "targetFieldName" .}}){{~#unless @last}},{{/unless}}
     {{/each}}
 );
 
