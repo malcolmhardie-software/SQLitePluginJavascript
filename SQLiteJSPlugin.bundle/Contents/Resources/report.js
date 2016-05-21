@@ -104,6 +104,18 @@ function init()
         
     });
     
+    Handlebars.registerHelper("ifValidFk", function(options) {
+       
+       
+        if ((!this.targetTableName) || (!this.fieldPairs)) {
+            return options.inverse(this);
+        } else {
+            return options.fn(this);
+        }
+
+        
+    });
+    
     Handlebars.registerHelper("endWithSemi", function(options) {
        
        
@@ -119,6 +131,8 @@ function init()
 
         
     });
+    
+    
     
     
     definePartials();
