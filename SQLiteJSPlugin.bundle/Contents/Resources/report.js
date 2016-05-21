@@ -82,38 +82,12 @@ function init()
     
     Handlebars.registerHelper("fkColumnList", function(keyName,fk,opts) {
       
-        var list = fk.fieldPairs;
-      
-        if (list.length == 0) {
-            return "";
-        }
-  
-        var result = list[0][keyName];
-    
-        for (i=1;i<list.length;i++) {
-        
-            result += ", "+list[i][keyName];
-        }
-        return result;
+        return commaSeparatedKeyList(fk.fieldPairs,keyName);
     });
     
     Handlebars.registerHelper("indexColumnList", function(index,opts) {
       
-        var list = index.indexEntryList
-        
-        var keyName = "name";
-      
-        if (list.length == 0) {
-            return "";
-        }
-  
-        var result = list[0][keyName];
-    
-        for (i=1;i<list.length;i++) {
-        
-            result += ", "+list[i][keyName];
-        }
-        return result;
+        return commaSeparatedKeyList(index.indexEntryList,"name");
     });
     
     definePartials();
@@ -125,6 +99,23 @@ function init()
     
 }
 
+
+function commaSeparatedKeyList(list,keyName)
+{
+    if (list.length == 0) {
+        return "";
+    }
+
+    var result = list[0][keyName];
+
+    for (i=1;i<list.length;i++) {
+    
+        result += ", "+list[i][keyName];
+    }
+    return result;
+
+    
+}
 
 function commaSeparatedList(list)
 {
