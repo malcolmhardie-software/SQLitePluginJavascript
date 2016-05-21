@@ -72,6 +72,23 @@ function init()
                               }[operator];
                               });
     
+    
+    
+    Handlebars.registerHelper("columnList", function(list,opts) {
+      
+        if (list.count == 0) {
+            return "";
+        }
+      
+        var result = list[0];
+        
+        for (i=1;i<list.count;i++) {
+            
+            result += ","+list[i];
+        }
+        return result;
+    });
+    
     definePartials();
     
     //Console.log("js init complete");

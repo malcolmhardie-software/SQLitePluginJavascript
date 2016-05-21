@@ -25,9 +25,15 @@ CREATE TABLE {{fullyQualifiedName}}
     
     {{~#if referencesField}}{{#if referencesTable}} REFERENCES {{referencesTable}}({{referencesField}}){{/if}}{{/if}}
     
-    {{~#unless @last}},{{/unless}}
+    {{~#if ../foreignKeys}},{{else}}{{~#unless @last}},{{/unless}}{{/if}}    
+    {{/each}}
+    {{#each foreignKeys}}
+    FOREIGN KEY ({{~#each fieldPairs}}{{sourceFieldName}}{{~#unless @last}}, {{/unless}}{{/each~}}) REFERENCES {{targetTableName}} ({{~#each fieldPairs}}{{targetFieldName}}{{~#unless @last}}, {{/unless}}{{/each~}}){{~#unless @last}},{{/unless}}
     {{/each}}
 );
 
 {{/if_eq}}
 {{/each}}
+
+{{! add any table level foreign keys }}
+
