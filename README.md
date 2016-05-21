@@ -38,8 +38,7 @@ I expect to add some helper functions to help with this in the next release.
 
 ### Building
 
-* Download the code and open the xcode project.
-* Build the plugin
+Current version: No building required, just download and install
 
 ### Installing
 
@@ -52,7 +51,7 @@ In this example code, the plugin is currently "SQLEditor Example Plugin"
 
 ### Live Editing
 
-Once you have installed the plugin, you can actually edit while SQLEditor is open.
+Once you have installed the plugin, you can actually edit the plugin while SQLEditor is open.
 
 You will need to hit the manual refresh button above the source view
 
