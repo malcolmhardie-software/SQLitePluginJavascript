@@ -136,7 +136,7 @@ function commaSeparatedList(list)
 
 function definePartials()
 {
-    Handlebars.registerPartial('optionalComma','{{#unless @last}}{{listComma}}{{/unless}}');
+    Handlebars.registerPartial('optionalComma','{{~#unless @last}},{{/unless}}');
 
     
 }

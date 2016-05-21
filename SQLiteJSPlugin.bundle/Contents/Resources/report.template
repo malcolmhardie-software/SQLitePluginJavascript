@@ -23,14 +23,14 @@ CREATE TABLE {{fullyQualifiedName}}
     {{~#if properties.defaultValue}} DEFAULT "{{properties.defaultValue}}" {{/if}}
     
     
-    {{~#if ../primaryKeyList}},{{else}}{{~#unless @last}},{{/unless}}{{/if}}    
+    {{~#if ../primaryKeyList}},{{else}}{{> optionalComma}}{{/if}}    
     {{/each}}
     {{#if primaryKeyList}}
     PRIMARY KEY ({{primaryKeyList}})
     {{~#if ../foreignKeys}},{{else}}{{~#unless @last}},{{/unless}}{{/if}}    
     {{/if}}
     {{#each foreignKeys}}
-    FOREIGN KEY ({{fkColumnList "sourceFieldName" .}}) REFERENCES {{targetTableName}} ({{fkColumnList "targetFieldName" .}}){{~#unless @last}},{{/unless}}
+    FOREIGN KEY ({{fkColumnList "sourceFieldName" .}}) REFERENCES {{targetTableName}} ({{fkColumnList "targetFieldName" .}}){{> optionalComma}}
     {{/each}}
 );
 
