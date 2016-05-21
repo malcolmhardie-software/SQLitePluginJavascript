@@ -19,9 +19,9 @@ CREATE TABLE {{fullyQualifiedName}}
 (
     {{#each fields}}
     {{name}} {{type}}
-    {{~#if properties.unique}} UNIQUE{{/if}}
+    {{~#ifprop properties.unique}} UNIQUE{{/ifprop}}
     {{~#ifprop properties.notNull}} NOT NULL{{/ifprop}}
-    {{~#if properties.defaultValue}} DEFAULT "{{properties.defaultValue}}" {{/if}}
+    {{~#ifprop properties.defaultValue}} DEFAULT "{{properties.defaultValue}}" {{/ifprop}}
     
     
     {{~#if ../primaryKeyList}},{{else}}{{> optionalComma}}{{/if}}    
