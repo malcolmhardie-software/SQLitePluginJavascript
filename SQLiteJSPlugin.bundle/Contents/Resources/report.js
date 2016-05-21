@@ -104,6 +104,23 @@ function init()
         
     });
     
+    Handlebars.registerHelper("endWithSemi", function(options) {
+       
+       
+        
+        var originalString =  options.fn(this);
+        
+        
+        if (originalString.trim().slice(-1) == ";") {
+            return originalString;  
+        } else {
+            return originalString+";";
+        }
+
+        
+    });
+    
+    
     definePartials();
     
     //Console.log("js init complete");
@@ -204,7 +221,7 @@ function exportContainer(jsonContainer)
     var result = template(container);
     
     
-    result += jsonContainer;
+    // result += "\n\n"+jsonContainer;
     
     return result;
 }

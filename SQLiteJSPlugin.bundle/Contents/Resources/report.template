@@ -7,8 +7,8 @@ Copyright 2016 - MalcolmHardie Solutions Limited
 BSD License applies
 
 }}
-# SQL file from SQLEditor
-# {{documentInfo.documentName}} 
+/* SQL file from SQLEditor */
+/* {{documentInfo.documentName}} */
 
 {{#each objects }}
 {{#if_eq ClassType "SQLTable"}}
@@ -37,6 +37,19 @@ CREATE TABLE {{fullyQualifiedName}}
 
 {{/if_eq}}
 {{/each}}
+
+
+
+{{#each objects }}
+{{#if_eq ClassType "SQLView"}}
+{{#if comment}}
+/* {{comment}} */
+{{/if}}
+CREATE VIEW {{fullyQualifiedName}} AS {{#endWithSemi}}{{properties.queryString}}{{/endWithSemi}}
+
+{{/if_eq}}
+{{/each}}
+
 
 {{#each objects }}
 {{#if_eq ClassType "SQLTable"}}
