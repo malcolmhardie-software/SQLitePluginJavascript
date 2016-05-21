@@ -18,15 +18,17 @@ BSD License applies
 CREATE TABLE {{fullyQualifiedName}}
 (
     {{#each fields}}
-    {{name}} {{type}} 
-    {{~#if primaryKey}} PRIMARY KEY{{/if}}
+    {{name}} {{type}}
     {{~#if unique}} UNIQUE{{/if}}
     {{~#if properties.defaultValue}} DEFAULT "{{properties.defaultValue}}" {{/if}}
     
-    {{~#if referencesField}}{{#if referencesTable}} REFERENCES {{referencesTable}}({{referencesField}}){{/if}}{{/if}}
     
-    {{~#if ../foreignKeys}},{{else}}{{~#unless @last}},{{/unless}}{{/if}}    
+    {{~#if ../primaryKeyList}},{{else}}{{~#unless @last}},{{/unless}}{{/if}}    
     {{/each}}
+    {{#if primaryKeyList}}
+    PRIMARY KEY ({{primaryKeyList}})
+    {{~#if ../foreignKeys}},{{else}}{{~#unless @last}},{{/unless}}{{/if}}    
+    {{/if}}
     {{#each foreignKeys}}
     FOREIGN KEY ({{fkColumnList "sourceFieldName" .}}) REFERENCES {{targetTableName}} ({{fkColumnList "targetFieldName" .}}){{~#unless @last}},{{/unless}}
     {{/each}}
