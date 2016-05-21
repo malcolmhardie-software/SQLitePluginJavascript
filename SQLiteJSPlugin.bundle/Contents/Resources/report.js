@@ -90,6 +90,20 @@ function init()
         return commaSeparatedKeyList(index.indexEntryList,"name");
     });
     
+    
+    
+    Handlebars.registerHelper("ifprop", function(conditional,options) {
+       
+       
+        if ((conditional == undefined) || (conditional == false) || (conditional == "0")) {
+            return options.inverse(this);
+        } else {
+            return options.fn(this);
+        }
+
+        
+    });
+    
     definePartials();
     
     //Console.log("js init complete");
@@ -188,6 +202,9 @@ function exportContainer(jsonContainer)
     
     
     var result = template(container);
+    
+    
+    result += jsonContainer;
     
     return result;
 }
