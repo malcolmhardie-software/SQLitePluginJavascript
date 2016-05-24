@@ -41,7 +41,7 @@ DiffExporter.prototype.compareObjectName = function (name1,name2)
 DiffExporter.prototype.diffExport = function(container,diffContainer)
 {
     
-    var result = "/*Diff table list*/\n";
+    var result = "\n";
     
     
     var resultList = [];
@@ -123,7 +123,7 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     
     // add new tables
     
-    result += "\n\n /*new: \n"+addedTablesNames +"*/\n";
+    //result += "\n\n /*new: \n"+addedTablesNames +"*/\n";
     
 
     for (var k=0;k<addedTables.length;k++) {
@@ -134,7 +134,7 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
 
     // modify changed tables
     
-    result += "\n\n /*modified : \n "+modifiedTablesNames +"*/\n";
+    //result += "\n\n /*modified : \n "+modifiedTablesNames +"*/\n";
     
     
     for (var k=0;k<modifiedTables.length;k++) {
@@ -148,7 +148,7 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     
     // delete removed tables
     
-    result += "\n\n /* deleted: \n "+deletedTablesNames +"*/\n";
+   // result += "\n\n /* deleted: \n "+deletedTablesNames +"*/\n";
     
     for (var k=0;k<deletedTables.length;k++) {
         var table = deletedTables[k];
@@ -166,15 +166,17 @@ function ifProp(conditional) {
 
 DiffExporter.prototype.modifyTable = function(table,compTable)
 {
-    var result = "";
+    var result = "\n";
     
-    result += "/* alter table "+table.fullyQualifiedName+" */\n"
+    //result += "/* alter table "+table.fullyQualifiedName+" */\n"
     
     
     var addedFields = []
     var deletedFields = []
     var modifiedFields = []
     
+    
+    var associativeCompFields = []
     
     var tableFieldNames = table.fields.map(function(value,index,array) {
         
@@ -189,6 +191,8 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
     
     
     
+    // find fields that exist in the current document
+    // or which have been added
     
     for (var i=0;i<table.fields.length;i++) {
         
@@ -203,17 +207,24 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
         
     }
     
+    // find fields that are in the comp container
+    // but not in the current document container
     for (var i=0;i<compTable.fields.length;i++) {
         
         var field = compTable.fields[i];
         var fieldName = field.name
         
-        if (tableFieldNames.includes(fieldName)) {
+        if (!tableFieldNames.includes(fieldName)) {
             deletedFields.push(field);
         }
         
+        
+        associativeCompFields[fieldName] = field
     }
     
+    
+    // now generate SQL for each added field
+    result += "\n";
     
     for (var i=0;i<addedFields.length;i++) {
         
@@ -224,11 +235,34 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
     }
     
     
-    if (this.canDropColumns) {
+    // generate SQL for modifying fields that have been removed
+    // but only if this dialect supports it
+    
+    if (this.canModifyColumns()) {
+        result += "\n";
+        for (var i=0;i<modifiedFields.length;i++) {
         
-        for (var i=0;i<addedFields.length;i++) {
+            var field = modifiedFields[i];
+            
+     
+            var compField = associativeCompFields[field.name]
+     
+            result += this.dropField(table,field,compField);
         
-            var field = addedFields[i];
+        }
+    
+    }
+    
+    
+    
+    // generate SQL for dropping fields that have been removed
+    // but only if this dialect supports it
+    
+    if (this.canDropColumns()) {
+        result += "\n";
+        for (var i=0;i<deletedFields.length;i++) {
+        
+            var field = deletedFields[i];
      
             result += this.dropField(table,field);
         
@@ -236,17 +270,29 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
     
     }
     
+
+    
     return result;
 }
 
 
-DiffExporter.prototype.canDropColumns = false;
+DiffExporter.prototype.canDropColumns = function() { return false }
+DiffExporter.prototype.canModifyColumns = function() { return false }
 
-// sqlite can't drop columns
 DiffExporter.prototype.dropField = function(table,field)
 {
+    // sqlite can't drop columns
+    // so this won't get called
     
-    return "";   
+    var result = "ALTER TABLE "+table.fullyQualifiedName;
+    
+    result += " DROP COLUMN "
+    
+    result += field.name;
+    
+    result += ";\n";
+        
+    return result
 }
 
 DiffExporter.prototype.addField = function(table,field) 
@@ -277,6 +323,12 @@ DiffExporter.prototype.addField = function(table,field)
     return result;
 }
 
+
+DiffExporter.prototype.modifyField = function(table,field,compField)
+{
+    return "";
+    
+}
 
 
 DiffExporter.prototype.dropTable = function(table) 
