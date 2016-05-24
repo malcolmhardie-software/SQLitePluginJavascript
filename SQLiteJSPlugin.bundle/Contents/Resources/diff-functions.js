@@ -73,6 +73,9 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     var modifiedTables = [];
     var deletedTables = [];
     
+
+    
+    
     for (var i=0;i<objectList.length;i++) {
         
         var table = objectList[i];
@@ -121,14 +124,27 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     
 
     
+
+    
+
+    // currently there are two separate text blocks
+    // which are built at the same time.
+    // it might be clearer to separate them
+    // ?
+
+    var tableBlock = "";
+    var viewBlock = "";
+    
     // add new tables
-    
-    //result += "\n\n /*new: \n"+addedTablesNames +"*/\n";
-    
 
     for (var k=0;k<addedTables.length;k++) {
         var table = addedTables[k];
-        result += this.addTable(table);
+        if (table.ClassType == "SQLTable") {
+            tableBlock += this.addTable(table);
+        
+        } else if (table.ClassType == "SQLView") {
+            viewBlock += this.addView(table);
+        }
     }
     
 
@@ -143,7 +159,11 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
         
         var compTable = compObjectListNameAssoc[table.fullyQualifiedName]
         
-        result += this.modifyTable(table,compTable);
+        if (table.ClassType == "SQLTable") {
+            tableBlock += this.modifyTable(table,compTable);
+        } else if (table.ClassType === "SQLView") {
+            viewBlock += this.modifyView(table,compTable);
+        }
     }
     
     // delete removed tables
@@ -152,8 +172,21 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     
     for (var k=0;k<deletedTables.length;k++) {
         var table = deletedTables[k];
-        result += this.dropTable(table);
+        if (table.ClassType == "SQLTable") {
+            tableBlock += this.dropTable(table);
+        } else if (table.ClassType == "SQLView") {
+            viewBlock += this.dropView(table);
+        }
     }
+
+    
+    
+    
+    result += tableBlock
+    result += "\n";
+    result += viewBlock
+    
+    
     
     return result;
 }
@@ -407,3 +440,40 @@ DiffExporter.prototype.addTable = function(table)
 
     return result;
 }
+
+
+DiffExporter.prototype.addView = function(view)
+{
+    
+    var result = "CREATE VIEW "+view.fullyQualifiedName
+    
+    
+    var queryString =  view.properties.queryString
+    result += " AS "+queryString
+    
+    if (queryString.trim().slice(-1) != ";") {
+        result += ";"
+    }
+    
+    result += "\n"
+    
+    return result;
+}
+
+DiffExporter.prototype.dropView = function(view)
+{
+    
+    return "DROP VIEW "+view.fullyQualifiedName+";\n";
+}
+
+DiffExporter.prototype.modifyView = function(view,compView)
+{
+    
+
+    if (view.properties.queryString == compView.properties.queryString) {
+        return "";
+    }
+
+    return "\n"+this.dropView(view)+this.addView(view);
+}
+
