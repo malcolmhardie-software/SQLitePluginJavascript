@@ -47,7 +47,7 @@ Current version: No building required, just download and install
 ### Using the plugin
 
 * Change the document dialect to the name of the plugin
-In this example code, the plugin is currently "SQLEditor Example Plugin"
+In this example code, the plugin is currently "SQLite (JS)"
 
 ### Live Editing
 
@@ -61,6 +61,8 @@ You will need to hit the manual refresh button above the source view
 * No database support
 * No import support
 * No dialect specific types list yet
+
+* Quoting of names, keywords and values isn't implemented (see comparison with the built in SQLite exporter)
 
 ### SQLEditor specific additions
 
