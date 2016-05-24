@@ -117,7 +117,7 @@ function exportContainer(jsonContainer)
     
     
 
-    
+    // empty container for diff
     var compContainer = new Object();
     compContainer.objects = [];
     
