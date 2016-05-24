@@ -189,19 +189,15 @@ function definePartials()
 function exportContainerDiff(jsonContainer,jsonCompContainer)
 {
     
-    // var source = SQLEditorJS.contentsOfFile("report.template");
-    //
-    //
-    // var template = Handlebars.compile(source);
-    //
-    //
-    // var container = JSON.parse(jsonContainer);
-    //
-    //
-    //
-    // var result = template(container);
-    //
+
     
+    // if the comparison container is empty
+    // handle this as a simple export
+    
+    if  (jsonCompContainer == "[]") {
+        
+        return exportContainer(jsonContainer);
+    }
     
     
     
@@ -211,7 +207,14 @@ function exportContainerDiff(jsonContainer,jsonCompContainer)
     var exporter = new DiffExporter();
     
     var container = JSON.parse(jsonContainer);
+    
+    
+
+    
     var compContainer = JSON.parse(jsonCompContainer);
+    
+    
+
     
     var result = exporter.diffExport(container,compContainer);
     
