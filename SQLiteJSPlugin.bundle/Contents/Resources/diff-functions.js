@@ -50,6 +50,8 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     
     var compObjectList = diffContainer.objects;
     
+    
+    var compObjectListNameAssoc = []
   
     var currentObjectListNames = objectList.map(function(value,index,array) {
         
@@ -60,6 +62,8 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
         
         return value.fullyQualifiedName;
     });
+
+
 
 
     //result += compObjectListNames;
@@ -93,6 +97,10 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
         if (!currentObjectListNames.includes(tableName)) {
             deletedTables.push(table);
         }
+        
+        // setup associative array;
+        
+        compObjectListNameAssoc[tableName] = table
     }
 
     var addedTablesNames = addedTables.map(function(value,index,array) {
@@ -131,7 +139,11 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     
     for (var k=0;k<modifiedTables.length;k++) {
         var table = modifiedTables[k];
-        result += this.modifyTable(table);
+        
+        
+        var compTable = compObjectListNameAssoc[table.fullyQualifiedName]
+        
+        result += this.modifyTable(table,compTable);
     }
     
     // delete removed tables
@@ -152,18 +164,119 @@ function ifProp(conditional) {
 }
 
 
-DiffExporter.prototype.modifyTable = function(table)
+DiffExporter.prototype.modifyTable = function(table,compTable)
 {
     var result = "";
     
     result += "/* alter table "+table.fullyQualifiedName+" */\n"
     
     
+    var addedFields = []
+    var deletedFields = []
+    var modifiedFields = []
     
     
+    var tableFieldNames = table.fields.map(function(value,index,array) {
+        
+        return value.name;
+    });
+    
+    
+    var compFieldNames = compTable.fields.map(function(value,index,array) {
+        
+        return value.name;
+    });
+    
+    
+    
+    
+    for (var i=0;i<table.fields.length;i++) {
+        
+        var field = table.fields[i];
+        var fieldName = field.name
+        
+        if (compFieldNames.includes(fieldName)) {
+            modifiedFields.push(field);
+        } else {
+            addedFields.push(field);
+        }
+        
+    }
+    
+    for (var i=0;i<compTable.fields.length;i++) {
+        
+        var field = compTable.fields[i];
+        var fieldName = field.name
+        
+        if (tableFieldNames.includes(fieldName)) {
+            deletedFields.push(field);
+        }
+        
+    }
+    
+    
+    for (var i=0;i<addedFields.length;i++) {
+        
+        var field = addedFields[i];
+     
+        result += this.addField(table,field);
+        
+    }
+    
+    
+    if (this.canDropColumns) {
+        
+        for (var i=0;i<addedFields.length;i++) {
+        
+            var field = addedFields[i];
+     
+            result += this.dropField(table,field);
+        
+        }
+    
+    }
     
     return result;
 }
+
+
+DiffExporter.prototype.canDropColumns = false;
+
+// sqlite can't drop columns
+DiffExporter.prototype.dropField = function(table,field)
+{
+    
+    return "";   
+}
+
+DiffExporter.prototype.addField = function(table,field) 
+{
+    
+    var result = "ALTER TABLE "+table.fullyQualifiedName;
+    
+    result += " ADD COLUMN "
+    
+    result += field.name;
+    result += " ";
+    result += field.type;
+
+    if (ifProp(field.properties.unique)) {
+        result += " UNIQUE"
+    }
+
+    if (ifProp(field.properties.notNull)) {
+        result += " NOT NULL"
+    }
+
+    if (field.properties.defaultValue != "") {
+        result += " DEFAULT "+field.properties.defaultValue;
+    }
+    
+    result += ";\n";
+    
+    return result;
+}
+
 
 
 DiffExporter.prototype.dropTable = function(table) 
