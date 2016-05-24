@@ -31,7 +31,7 @@ CREATE TABLE {{fullyQualifiedName}}
     {{~#if ../foreignKeys}},{{else}}{{> optionalComma}}{{/if}}    
     {{/if}}
     {{#each foreignKeys}}
-    FOREIGN KEY {{targetTableName}}({{fkColumnList "sourceFieldName" .}}) REFERENCES {{targetTableName}} ({{fkColumnList "targetFieldName" .}}){{> optionalComma}}
+    FOREIGN KEY ({{fkColumnList "sourceFieldName" .}}) REFERENCES {{targetTableName}} ({{fkColumnList "targetFieldName" .}}){{> optionalComma}}
     {{/each}}
 );
 
