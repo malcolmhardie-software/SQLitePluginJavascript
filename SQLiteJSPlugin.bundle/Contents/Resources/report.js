@@ -34,111 +34,11 @@ function init()
 
     //Console.log("init plugin");
    
-    SQLEditorJS.evaluate("handlebars-v3.0.3.js");
     
     SQLEditorJS.evaluate("diff-functions.js");
     
-    Handlebars.registerHelper('if_eq', function(a, b, opts) {
-                              if(a == b)
-                              return opts.fn(this);
-                              else
-                              return opts.inverse(this);
-                              });
-    
-    Handlebars.registerHelper('listComma', function() {
-                              return ",\n"
-                              });
-    
-    
-    Handlebars.registerHelper('shouldShowIndexList', function(a, opts) {
-                              
-                              
-                              if((a.primaryKeyList && (a.primaryKeyList.length > 0)) || (a.indexes && (a.indexes.length > 0))) {
-                                return opts.fn(this);
-                              }
-                              });
-    
-    
-    Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
-                              lvalue = parseFloat(lvalue);
-                              rvalue = parseFloat(rvalue);
-                              
-                              return {
-                              "+": lvalue + rvalue,
-                              "-": lvalue - rvalue,
-                              "*": lvalue * rvalue,
-                              "/": lvalue / rvalue,
-                              "%": lvalue % rvalue
-                              }[operator];
-                              });
-    
-    
-    
-    Handlebars.registerHelper("columnList", function(list,opts) {
-      
-        return commaSeparatedList(list);
-    });
-    
-    
-    Handlebars.registerHelper("fkColumnList", function(keyName,fk,opts) {
-      
-        return commaSeparatedKeyList(fk.fieldPairs,keyName);
-    });
-    
-    Handlebars.registerHelper("indexColumnList", function(index,opts) {
-      
-        return commaSeparatedKeyList(index.indexEntryList,"name");
-    });
-    
-    
-    
-    Handlebars.registerHelper("ifprop", function(conditional,options) {
-       
-       
-        if ((conditional == undefined) || (conditional == false) || (conditional == "0")) {
-            return options.inverse(this);
-        } else {
-            return options.fn(this);
-        }
 
-        
-    });
-    
-    Handlebars.registerHelper("ifValidFk", function(options) {
-       
-       
-        if ((!this.targetTableName) || (!this.fieldPairs)) {
-            return options.inverse(this);
-        } else {
-            return options.fn(this);
-        }
 
-        
-    });
-    
-    Handlebars.registerHelper("endWithSemi", function(options) {
-       
-       
-        
-        var originalString =  options.fn(this);
-        
-        
-        if (originalString.trim().slice(-1) == ";") {
-            return originalString;  
-        } else {
-            return originalString+";";
-        }
-
-        
-    });
-    
-    
-    
-    
-    definePartials();
-    
-    //Console.log("js init complete");
-    
     
     return true;
     
@@ -179,30 +79,10 @@ function commaSeparatedList(list)
     
 }
 
-function definePartials()
-{
-    Handlebars.registerPartial('optionalComma','{{~#unless @last}},{{/unless}}');
-
-    
-}
 
 function exportContainerDiff(jsonContainer,jsonCompContainer)
 {
-    
 
-    
-    // if the comparison container is empty
-    // handle this as a simple export
-    
-    if  (jsonCompContainer == "[]") {
-        
-        return exportContainer(jsonContainer);
-    }
-    
-    
-    
-    // result = "#Diff is not yet supported by this plugin\n"+result;
-    
     
     var exporter = new DiffExporter();
     
@@ -230,27 +110,27 @@ function exportContainerDiff(jsonContainer,jsonCompContainer)
 function exportContainer(jsonContainer)
 {
     
-    //Console.log("export container");
     
-    var source = SQLEditorJS.contentsOfFile("report.template");
-    
-    
-
-    
-
-
-    var template = Handlebars.compile(source);
-    
+    var exporter = new DiffExporter();
     
     var container = JSON.parse(jsonContainer);
     
     
+
     
-    var result = template(container);
+    var compContainer = new Object();
+    compContainer.objects = [];
+    
+
+    
+    var result = "/* SQLite (JS) Plugin Export */\n"
+    result += exporter.diffExport(container,compContainer);
     
     
-    // result += "\n\n"+jsonContainer;
     
     return result;
+    
+    
+
 }
 
