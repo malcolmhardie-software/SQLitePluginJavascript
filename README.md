@@ -92,4 +92,6 @@ Suggestions on more ideomatic javascript or any other technical improvements are
 
 
 
-
+2016-05-24
+* The example now diffs fields
+* Better handling of foreign keys and primary keys
