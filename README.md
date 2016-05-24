@@ -4,7 +4,7 @@ Example Javascript based plugin for SQLEditor
 
 This project demonstrates how to write a simple export plugin for <a href="https://www.malcolmhardie.com/sqleditor/">SQLEditor</a> using Javascript.
 
-This code is mostly the same as the bundled HTML Report plugin that ships with SQLEditor, except that it doesn't have a binary component and the plugin type is export rather than report.
+This code is similar to the the bundled HTML Report plugin that ships with SQLEditor, except that it doesn't have a binary component and the plugin type is export rather than report.
 
 The binary component in the plugin bundled with SQLEditor is to work around an obscure code signing issue and doesn't actually do anything.
 
