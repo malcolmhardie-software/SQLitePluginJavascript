@@ -335,6 +335,16 @@ DiffExporter.prototype.addField = function(table,field)
     
     result += " ADD COLUMN "
     
+    result += this.fieldSpec(table,field)
+    
+    result += ";\n";
+    
+    return result;
+}
+
+DiffExporter.prototype.fieldSpec = function(table,field) 
+{
+    var result = "";
     result += field.name;
     result += " ";
     result += field.type;
@@ -351,11 +361,9 @@ DiffExporter.prototype.addField = function(table,field)
         result += " DEFAULT "+field.properties.defaultValue;
     }
     
-    result += ";\n";
-    
     return result;
+    
 }
-
 
 DiffExporter.prototype.modifyField = function(table,field,compField)
 {
@@ -384,21 +392,7 @@ DiffExporter.prototype.addTable = function(table)
     for (var i=0;i<table.fields.length;i++) {
         var field = table.fields[i];
 
-        result += field.name;
-        result += " ";
-        result += field.type;
-
-        if (ifProp(field.properties.unique)) {
-            result += " UNIQUE"
-        }
-
-        if (ifProp(field.properties.notNull)) {
-            result += " NOT NULL"
-        }
-
-        if (field.properties.defaultValue != "") {
-            result += " DEFAULT "+field.properties.defaultValue;
-        }
+        result += this.fieldSpec(table,field)
 
         if (i<table.fields.length-1 || table.primaryKeyList || table.foreignKeys.length) {
             result += ",\n";
