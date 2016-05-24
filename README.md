@@ -34,7 +34,9 @@ You get two json containers, the first is the current document, the second is th
 
 Currently you need to calculate which objects have been added and which removed by diffing these containers.
 
-I expect to add some helper functions to help with this in the next release.
+The code to do this is in the diff-function.js file
+
+I'm hoping to refactor it a bit. :-)
 
 ### Building
 
