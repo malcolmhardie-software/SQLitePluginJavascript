@@ -55,76 +55,25 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     }
     
     
-    var compObjectListNameAssoc = []
-  
-    var currentObjectListNames = objectList.map(function(value,index,array) {
+
+    
+    
+    var nameMapFunction = function(value,index,array) {
         
         return value.fullyQualifiedName;
-    });
+    }
     
-    var compObjectListNames = compObjectList.map(function(value,index,array) {
-        
-        return value.fullyQualifiedName;
-    });
-
-
-
-
-    //result += compObjectListNames;
-    
-    
-    var addedTables = [];
-    var modifiedTables = [];
-    var deletedTables = [];
-    
-
-    
-    
-    for (var i=0;i<objectList.length;i++) {
-        
-        var table = objectList[i];
-        
-        var tableName = table.fullyQualifiedName;
-       
-        if (compObjectListNames.includes(tableName)) {
-            modifiedTables.push(table);
-        } else {
-            addedTables.push(table);
-        }
-          
+    var nameFunction = function(object) {
+        return object.fullyQualifiedName;
     }
     
     
-    for (var j=0;j<compObjectList.length;j++) {
-            
-        var table = compObjectList[j];
-        
-        var tableName = table.fullyQualifiedName;
-        
-        if (!currentObjectListNames.includes(tableName)) {
-            deletedTables.push(table);
-        }
-        
-        // setup associative array;
-        
-        compObjectListNameAssoc[tableName] = table
-    }
+    var diffResult = this.calculateDiffSets(objectList,compObjectList,nameMapFunction,nameFunction);
+    
+    
+    
+    
 
-    var addedTablesNames = addedTables.map(function(value,index,array) {
-        
-        return value.fullyQualifiedName;
-    });
-    
-    var deletedTablesNames = deletedTables.map(function(value,index,array) {
-        
-        return value.fullyQualifiedName;
-    });
-    
-    var modifiedTablesNames = modifiedTables.map(function(value,index,array) {
-        
-        return value.fullyQualifiedName;
-    });
-    
     
 
     
@@ -147,8 +96,8 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     
     // add new tables
 
-    for (var k=0;k<addedTables.length;k++) {
-        var table = addedTables[k];
+    for (var k=0;k<diffResult.added.length;k++) {
+        var table = diffResult.added[k];
         if (table.ClassType == "SQLTable") {
             tableBlock += this.addTable(table);
             
@@ -162,14 +111,13 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
 
     // modify changed tables
     
-    //result += "\n\n /*modified : \n "+modifiedTablesNames +"*/\n";
+
     
-    
-    for (var k=0;k<modifiedTables.length;k++) {
-        var table = modifiedTables[k];
+    for (var k=0;k<diffResult.modified.length;k++) {
+        var table = diffResult.modified[k];
         
         
-        var compTable = compObjectListNameAssoc[table.fullyQualifiedName]
+        var compTable = diffResult.nameAssoc[table.fullyQualifiedName]
         
         if (table.ClassType == "SQLTable") {
             tableBlock += this.modifyTable(table,compTable);
@@ -180,10 +128,9 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     
     // delete removed tables
     
-   // result += "\n\n /* deleted: \n "+deletedTablesNames +"*/\n";
     
-    for (var k=0;k<deletedTables.length;k++) {
-        var table = deletedTables[k];
+    for (var k=0;k<diffResult.deleted.length;k++) {
+        var table = diffResult.deleted[k];
         if (table.ClassType == "SQLTable") {
             tableBlock += this.dropTable(table);
         } else if (table.ClassType == "SQLView") {
@@ -326,6 +273,11 @@ DiffExporter.prototype.calculateDiffSets = function(objectList,compObjectList,na
     diffResult.modified = []
     diffResult.nameAssoc = []
     
+    
+    diffResult.addedNames = []
+    diffResult.deletedNames = []
+    diffResult.modifiedNames = []
+    
     var objectNameList = objectList.map(nameMapFunction);
 
     var compNameList = compObjectList.map(nameMapFunction);
@@ -341,8 +293,10 @@ DiffExporter.prototype.calculateDiffSets = function(objectList,compObjectList,na
         
         if (compNameList.includes(fieldName)) {
             diffResult.modified.push(field);
+            diffResult.modifiedNames.push(fieldName)
         } else {
             diffResult.added.push(field);
+            diffResult.addedNames.push(fieldName)
         }
         
     }
@@ -356,6 +310,7 @@ DiffExporter.prototype.calculateDiffSets = function(objectList,compObjectList,na
         
         if (!objectNameList.includes(fieldName)) {
             diffResult.deleted.push(field);
+            diffResult.deletedNames.push(fieldName)
         }
         
         
