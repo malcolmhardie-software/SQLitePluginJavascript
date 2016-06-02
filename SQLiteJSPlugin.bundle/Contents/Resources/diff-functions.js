@@ -127,13 +127,19 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
 
     
 
-    // currently there are two separate text blocks
+    // currently there are three separate text blocks
     // which are built at the same time.
     // it might be clearer to separate them
     // ?
+    // postload is added at the end
+    // preload at the top
 
+
+    var preloadBlock = ""
     var tableBlock = "";
     var viewBlock = "";
+    
+    var postLoadBlock = ""
     
     // add new tables
 
@@ -141,6 +147,8 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
         var table = addedTables[k];
         if (table.ClassType == "SQLTable") {
             tableBlock += this.addTable(table);
+            
+            postLoadBlock += this.addTablePostload(table);
         
         } else if (table.ClassType == "SQLView") {
             viewBlock += this.addView(table);
@@ -180,12 +188,26 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     }
 
     
+    if (preloadBlock != "") {
+        result += preloadBlock
+        result += "\n"
+    }
     
+    if (tableBlock != "") {
+        result += tableBlock
+        result += "\n"
+    }
     
-    result += tableBlock
-    result += "\n";
-    result += viewBlock
+    if (viewBlock != "") {
+        result += viewBlock
+        result += "\n"
+    }
     
+    if (postLoadBlock != "") {
+        
+        result += postLoadBlock
+        result += "\n"
+    }
     
     
     return result;
@@ -527,6 +549,41 @@ DiffExporter.prototype.addTable = function(table)
     return result;
 }
 
+
+DiffExporter.prototype.addTablePostload = function(table) 
+{
+    
+    var result = "";
+    for (var i=0;i<table.indexes.length;i++) {
+        
+        var curIndex = table.indexes[i];
+         
+         
+        // CREATE INDEX worldgoodbye_test_worldgoodbye_idx_1 ON test.worldgoodbye (id);
+        
+        if (curIndex.properties.indexType === "UNIQUE") {
+                result += "CREATE UNIQUE INDEX "
+        } else {
+        
+            result += "CREATE INDEX "
+        }
+        
+        result += this.quoteName(curIndex.name)
+        
+        result += " ON "
+        
+        result += this.nameForObject(table)
+        
+        
+        result += " ("+this.commaSeparatedKeyList(curIndex.indexEntryList,"name",true)+")";
+         
+        result += ";\n"
+         
+    }
+     
+     
+    return result;
+}
 
 DiffExporter.prototype.addView = function(view)
 {
