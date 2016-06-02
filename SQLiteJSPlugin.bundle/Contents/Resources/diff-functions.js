@@ -10,24 +10,7 @@ var DiffExporter = function () {
 
 }
 
-DiffExporter.prototype.listOfTablesToAdd = function (container,diffContainer)
-{
-    
-    
-}
 
-
-DiffExporter.prototype.listOfTablesToDrop = function(container,diffContainer)
-{
-    
-    
-}
-
-
-DiffExporter.prototype.listOfTablesToModify = function (container,diffContainer)
-{
-    
-}
 
 
 DiffExporter.prototype.compareObjectName = function (name1,name2)
@@ -37,7 +20,14 @@ DiffExporter.prototype.compareObjectName = function (name1,name2)
 
 }
 
+/**
+    main export and diff function
+    pass in one or two container structures (from SQLEditor)
+    returns SQL to modify from container to diffContainer
+    (or as close as possible)
 
+    diffContainer may be undefined or empty array to generate a simple export
+*/
 DiffExporter.prototype.diffExport = function(container,diffContainer)
 {
     
@@ -262,6 +252,16 @@ DiffExporter.prototype.nameForObject = function(object) {
 
 }
 
+/** 
+pass in two object lists and a method to generate a comparison string (usually returning the object name)
+
+returns a list of objects that have been added, deleted or modified between the two object lists
+
+also returns lists of the names of those objects (to avoid running another loop on the names)
+
+something of a kitchen sink method perhaps?
+
+**/
 
 DiffExporter.prototype.calculateDiffSets = function(objectList,compObjectList,nameFunction)
 {
