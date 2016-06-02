@@ -197,6 +197,98 @@ function ifProp(conditional) {
 }
 
 
+DiffExporter.prototype.hasWhiteSpace = function(s) {
+  return /\s|\./g.test(s);
+}
+
+
+DiffExporter.prototype.quoteString = function(value) {
+    
+    
+    return "\""+value+"\""
+}
+
+DiffExporter.prototype.quoteName = function(value) {
+ 
+    if (this.hasWhiteSpace(value)) {
+        return this.quoteString(value);
+    }
+    return value;
+}
+
+DiffExporter.prototype.quotedDefaultValue = function(field) {
+    
+    
+    if (ifProp(field.properties.noQuoteDefault)) {
+        return field.properties.defaultValue;
+    }
+    
+    
+    return this.quoteString(field.properties.defaultValue);
+}
+
+
+
+DiffExporter.prototype.quoteObjectName = function(objectName) {
+
+
+
+    var parts = objectName.split(".");
+    
+    if (parts.length == 1) {
+        return this.quoteName(objectName);
+    }
+    
+    var schema = parts[0]
+    var baseName = parts[1]
+    
+    return this.quoteName(schema)+"."+this.quoteName(baseName)
+    
+
+}
+
+DiffExporter.prototype.commaSeparatedKeyList = function(list,keyName,quoted)
+{
+    if (list.length == 0) {
+        return "";
+    }
+
+    var result = list[0][keyName];
+    
+    if (quoted) {
+       result = this.quoteName(result); 
+    }
+
+    for (i=1;i<list.length;i++) {
+    
+        var newValue = list[i][keyName];
+        
+        
+        
+        if (quoted) {
+            newValue = this.quoteName(newValue);
+            
+        }
+        result += ", "+newValue;
+    }
+    return result;
+
+    
+}
+
+/**
+    returns the name of the object
+    quoted if it contains spaces
+**/
+DiffExporter.prototype.nameForObject = function(object) {
+
+        
+
+    return this.quoteObjectName(object.fullyQualifiedName)
+
+
+}
+
 DiffExporter.prototype.modifyTable = function(table,compTable)
 {
     var result = "\n";
@@ -317,7 +409,7 @@ DiffExporter.prototype.dropField = function(table,field)
     // sqlite can't drop columns
     // so this won't get called
     
-    var result = "ALTER TABLE "+table.fullyQualifiedName;
+    var result = "ALTER TABLE "+this.nameForObject(table);
     
     result += " DROP COLUMN "
     
@@ -331,7 +423,7 @@ DiffExporter.prototype.dropField = function(table,field)
 DiffExporter.prototype.addField = function(table,field) 
 {
     
-    var result = "ALTER TABLE "+table.fullyQualifiedName;
+    var result = "ALTER TABLE "+this.nameForObject(table);
     
     result += " ADD COLUMN "
     
@@ -345,7 +437,7 @@ DiffExporter.prototype.addField = function(table,field)
 DiffExporter.prototype.fieldSpec = function(table,field) 
 {
     var result = "";
-    result += field.name;
+    result += this.quoteName(field.name);
     result += " ";
     result += field.type;
 
@@ -358,7 +450,7 @@ DiffExporter.prototype.fieldSpec = function(table,field)
     }
 
     if (field.properties.defaultValue != "") {
-        result += " DEFAULT "+field.properties.defaultValue;
+        result += " DEFAULT "+this.quotedDefaultValue(field);
     }
     
     return result;
@@ -375,7 +467,7 @@ DiffExporter.prototype.modifyField = function(table,field,compField)
 DiffExporter.prototype.dropTable = function(table) 
 {
     
-    var result = "\nDROP TABLE "+table.fullyQualifiedName
+    var result = "\nDROP TABLE "+this.nameForObject(table)
     
     result += ";\n";
     
@@ -385,7 +477,7 @@ DiffExporter.prototype.dropTable = function(table)
 DiffExporter.prototype.addTable = function(table) 
 {
     
-    var result = "\nCREATE TABLE "+ table.fullyQualifiedName
+    var result = "\nCREATE TABLE "+ this.nameForObject(table)
     
     result += "\n(\n";
     
@@ -415,13 +507,13 @@ DiffExporter.prototype.addTable = function(table)
 
         
 
-        result += "("+commaSeparatedKeyList(foreignKey.fieldPairs,"sourceFieldName")+")";
+        result += "("+this.commaSeparatedKeyList(foreignKey.fieldPairs,"sourceFieldName",true)+")";
 
         result += " REFERENCES ";
 
-        result += foreignKey.targetTableName;
+        result += this.quoteObjectName(foreignKey.targetTableName);
 
-        result += "("+commaSeparatedKeyList(foreignKey.fieldPairs,"targetFieldName")+")";
+        result += "("+this.commaSeparatedKeyList(foreignKey.fieldPairs,"targetFieldName",true)+")";
 
         if (k < table.foreignKeys.length-1) {
             result += ",\n"
@@ -439,10 +531,15 @@ DiffExporter.prototype.addTable = function(table)
 DiffExporter.prototype.addView = function(view)
 {
     
-    var result = "CREATE VIEW "+view.fullyQualifiedName
+    var result = "CREATE VIEW "+this.nameForObject(view)
     
     
     var queryString =  view.properties.queryString
+    
+    if (undefined == queryString) {
+        queryString = "SELECT NULL";
+    }
+    
     result += " AS "+queryString
     
     if (queryString.trim().slice(-1) != ";") {
@@ -457,7 +554,7 @@ DiffExporter.prototype.addView = function(view)
 DiffExporter.prototype.dropView = function(view)
 {
     
-    return "DROP VIEW "+view.fullyQualifiedName+";\n";
+    return "DROP VIEW "+this.nameForObject(view)+";\n";
 }
 
 DiffExporter.prototype.modifyView = function(view,compView)
@@ -470,4 +567,6 @@ DiffExporter.prototype.modifyView = function(view,compView)
 
     return "\n"+this.dropView(view)+this.addView(view);
 }
+
+
 

@@ -45,39 +45,7 @@ function init()
 }
 
 
-function commaSeparatedKeyList(list,keyName)
-{
-    if (list.length == 0) {
-        return "";
-    }
 
-    var result = list[0][keyName];
-
-    for (i=1;i<list.length;i++) {
-    
-        result += ", "+list[i][keyName];
-    }
-    return result;
-
-    
-}
-
-function commaSeparatedList(list)
-{
-    
-    if (list.count == 0) {
-        return "";
-    }
-  
-    var result = list[0];
-    
-    for (i=1;i<list.length;i++) {
-        
-        result += ","+list[i];
-    }
-    return result;
-    
-}
 
 
 function exportContainerDiff(jsonContainer,jsonCompContainer)
