@@ -315,6 +315,63 @@ DiffExporter.prototype.nameForObject = function(object) {
 
 }
 
+
+DiffExporter.prototype.calculateDiffSets = function(objectList,compObjectList,nameMapFunction,nameFunction)
+{
+    
+    var diffResult = [];
+    
+    diffResult.added = []
+    diffResult.deleted = []
+    diffResult.modified = []
+    diffResult.nameAssoc = []
+    
+    var objectNameList = objectList.map(nameMapFunction);
+
+    var compNameList = compObjectList.map(nameMapFunction);
+    
+    
+    // find fields that exist in the current document
+    // or which have been added
+    
+    for (var i=0;i<objectList.length;i++) {
+        
+        var field = objectList[i];
+        var fieldName = nameFunction(field)
+        
+        if (compNameList.includes(fieldName)) {
+            diffResult.modified.push(field);
+        } else {
+            diffResult.added.push(field);
+        }
+        
+    }
+    
+    // find fields that are in the comp container
+    // but not in the current document container
+    for (var i=0;i<compObjectList.length;i++) {
+        
+        var field = compObjectList[i];
+        var fieldName = nameFunction(field)
+        
+        if (!objectNameList.includes(fieldName)) {
+            diffResult.deleted.push(field);
+        }
+        
+        
+        diffResult.nameAssoc[fieldName] = field
+    }
+    
+    
+    
+    
+    
+    return diffResult
+    
+
+}
+
+
 DiffExporter.prototype.modifyTable = function(table,compTable)
 {
     var result = "\n";
@@ -322,64 +379,27 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
     //result += "/* alter table "+table.fullyQualifiedName+" */\n"
     
     
-    var addedFields = []
-    var deletedFields = []
-    var modifiedFields = []
-    
-    
-    var associativeCompFields = []
-    
-    var tableFieldNames = table.fields.map(function(value,index,array) {
+    var nameMapFunction = function(value,index,array) {
         
         return value.name;
-    });
-    
-    
-    var compFieldNames = compTable.fields.map(function(value,index,array) {
-        
-        return value.name;
-    });
-    
-    
-    
-    // find fields that exist in the current document
-    // or which have been added
-    
-    for (var i=0;i<table.fields.length;i++) {
-        
-        var field = table.fields[i];
-        var fieldName = field.name
-        
-        if (compFieldNames.includes(fieldName)) {
-            modifiedFields.push(field);
-        } else {
-            addedFields.push(field);
-        }
-        
     }
     
-    // find fields that are in the comp container
-    // but not in the current document container
-    for (var i=0;i<compTable.fields.length;i++) {
-        
-        var field = compTable.fields[i];
-        var fieldName = field.name
-        
-        if (!tableFieldNames.includes(fieldName)) {
-            deletedFields.push(field);
-        }
-        
-        
-        associativeCompFields[fieldName] = field
+    var nameFunction = function(object) {
+        return object.name;
     }
     
+    
+    var diffResult = this.calculateDiffSets(table.fields,compTable.fields,nameMapFunction,nameFunction);
+    
+
+
     
     // now generate SQL for each added field
     result += "\n";
     
-    for (var i=0;i<addedFields.length;i++) {
+    for (var i=0;i<diffResult.added.length;i++) {
         
-        var field = addedFields[i];
+        var field = diffResult.added[i];
      
         result += this.addField(table,field);
         
@@ -391,12 +411,12 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
     
     if (this.canModifyColumns()) {
         result += "\n";
-        for (var i=0;i<modifiedFields.length;i++) {
+        for (var i=0;i<diffResult.modified.length;i++) {
         
-            var field = modifiedFields[i];
+            var field = diffResult.modified[i];
             
      
-            var compField = associativeCompFields[field.name]
+            var compField = diffResult.nameAssoc[field.name]
      
             result += this.dropField(table,field,compField);
         
@@ -411,9 +431,9 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
     
     if (this.canDropColumns()) {
         result += "\n";
-        for (var i=0;i<deletedFields.length;i++) {
+        for (var i=0;i<diffResult.deleted.length;i++) {
         
-            var field = deletedFields[i];
+            var field = diffResult.deleted[i];
      
             result += this.dropField(table,field);
         
