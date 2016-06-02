@@ -58,17 +58,14 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
 
     
     
-    var nameMapFunction = function(value,index,array) {
-        
-        return value.fullyQualifiedName;
-    }
+
     
     var nameFunction = function(object) {
         return object.fullyQualifiedName;
     }
     
     
-    var diffResult = this.calculateDiffSets(objectList,compObjectList,nameMapFunction,nameFunction);
+    var diffResult = this.calculateDiffSets(objectList,compObjectList,nameFunction);
     
     
     
@@ -121,6 +118,9 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
         
         if (table.ClassType == "SQLTable") {
             tableBlock += this.modifyTable(table,compTable);
+            
+            postLoadBlock += this.modifyTablePostLoad(table,compTable);
+            
         } else if (table.ClassType === "SQLView") {
             viewBlock += this.modifyView(table,compTable);
         }
@@ -263,7 +263,7 @@ DiffExporter.prototype.nameForObject = function(object) {
 }
 
 
-DiffExporter.prototype.calculateDiffSets = function(objectList,compObjectList,nameMapFunction,nameFunction)
+DiffExporter.prototype.calculateDiffSets = function(objectList,compObjectList,nameFunction)
 {
     
     var diffResult = [];
@@ -277,6 +277,11 @@ DiffExporter.prototype.calculateDiffSets = function(objectList,compObjectList,na
     diffResult.addedNames = []
     diffResult.deletedNames = []
     diffResult.modifiedNames = []
+    
+    var nameMapFunction = function(value,index,array) {
+        
+        return nameFunction(value);
+    }
     
     var objectNameList = objectList.map(nameMapFunction);
 
@@ -327,6 +332,8 @@ DiffExporter.prototype.calculateDiffSets = function(objectList,compObjectList,na
 }
 
 
+
+
 DiffExporter.prototype.modifyTable = function(table,compTable)
 {
     var result = "\n";
@@ -334,19 +341,16 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
     //result += "/* alter table "+table.fullyQualifiedName+" */\n"
     
     
-    var nameMapFunction = function(value,index,array) {
-        
-        return value.name;
-    }
+
     
     var nameFunction = function(object) {
         return object.name;
     }
     
     
-    var diffResult = this.calculateDiffSets(table.fields,compTable.fields,nameMapFunction,nameFunction);
+    var diffResult = this.calculateDiffSets(table.fields,compTable.fields,nameFunction);
     
-
+    
 
     
     // now generate SQL for each added field
@@ -373,7 +377,7 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
      
             var compField = diffResult.nameAssoc[field.name]
      
-            result += this.dropField(table,field,compField);
+            result += this.modifyField(table,field,compField);
         
         }
     
@@ -401,6 +405,70 @@ DiffExporter.prototype.modifyTable = function(table,compTable)
     return result;
 }
 
+
+DiffExporter.prototype.modifyTablePostLoad = function(table,compTable)
+{
+    
+
+    
+    var result = "\n";
+    
+    //result += "/* modifyTablePostLoad table "+table.fullyQualifiedName+" */\n"
+    
+    
+
+
+    
+    var nameFunction = function(object) {
+        return object.name;
+    }
+    
+    var diffResult = this.calculateDiffSets(table.indexes,compTable.indexes,nameFunction);
+    
+    // now generate SQL for each added index
+    result += "\n";
+    
+    for (var i=0;i<diffResult.added.length;i++) {
+        
+        var field = diffResult.added[i];
+     
+        result += this.addIndex(table,field);
+        
+    }
+    
+    for (var i=0;i<diffResult.deleted.length;i++) {
+        
+        var field = diffResult.deleted[i];
+     
+        result += this.dropIndex(table,field);
+        
+    }
+    
+    for (var i=0;i<diffResult.modified.length;i++) {
+        
+        var field = diffResult.modified[i];
+     
+        
+ 
+        var compField = diffResult.nameAssoc[field.name]
+ 
+        //result += this.modifyIndex(table,field,compField);
+        
+        var fieldExport = this.addIndex(table,field);
+        var compExport = this.addIndex(table,compField);
+        
+        if (fieldExport != compExport) {
+        
+            result += this.dropIndex(table,field);
+            result += this.addIndex(table,field);
+        
+        }
+    }
+    
+    return result;
+    
+    
+}
 
 DiffExporter.prototype.canDropColumns = function() { return false }
 DiffExporter.prototype.canModifyColumns = function() { return false }
