@@ -50,6 +50,10 @@ DiffExporter.prototype.diffExport = function(container,diffContainer)
     
     var compObjectList = diffContainer.objects;
     
+    if ((compObjectList == undefined) || (compObjectList.length == 0)) {
+        compObjectList = [];
+    }
+    
     
     var compObjectListNameAssoc = []
   
