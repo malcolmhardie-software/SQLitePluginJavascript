@@ -554,6 +554,47 @@ DiffExporter.prototype.addTable = function(table)
 }
 
 
+DiffExporter.prototype.addIndex = function(table,curIndex)
+{
+    
+    var result = ""
+    
+    // CREATE INDEX worldgoodbye_test_worldgoodbye_idx_1 ON test.worldgoodbye (id);
+    
+    if (curIndex.properties.indexType === "UNIQUE") {
+            result += "CREATE UNIQUE INDEX "
+    } else {
+    
+        result += "CREATE INDEX "
+    }
+    
+    result += this.quoteName(curIndex.name)
+    
+    result += " ON "
+    
+    result += this.nameForObject(table)
+    
+    
+    result += " ("+this.commaSeparatedKeyList(curIndex.indexEntryList,"name",true)+")";
+     
+    result += ";\n"
+    
+    return result;
+}
+
+DiffExporter.prototype.dropIndex = function(table,theIndex)
+{
+    
+    var result = "ALTER TABLE "
+    
+    result += this.nameForObject(table)
+    result += " DROP INDEX "
+    result += this.quoteName(theIndex.name)
+    result += ";\n";
+    
+    return result;
+}
+
 DiffExporter.prototype.addTablePostload = function(table) 
 {
     
@@ -562,27 +603,8 @@ DiffExporter.prototype.addTablePostload = function(table)
         
         var curIndex = table.indexes[i];
          
-         
-        // CREATE INDEX worldgoodbye_test_worldgoodbye_idx_1 ON test.worldgoodbye (id);
-        
-        if (curIndex.properties.indexType === "UNIQUE") {
-                result += "CREATE UNIQUE INDEX "
-        } else {
-        
-            result += "CREATE INDEX "
-        }
-        
-        result += this.quoteName(curIndex.name)
-        
-        result += " ON "
-        
-        result += this.nameForObject(table)
-        
-        
-        result += " ("+this.commaSeparatedKeyList(curIndex.indexEntryList,"name",true)+")";
-         
-        result += ";\n"
-         
+        result += this.addIndex(table,curIndex);
+
     }
      
      
