@@ -64,7 +64,6 @@ You will need to hit the manual refresh button above the source view
 * No import support
 * No dialect specific types list yet
 
-* Quoting of names, keywords and values isn't implemented (see comparison with the built in SQLite exporter)
 
 ### SQLEditor specific additions
 
@@ -99,3 +98,9 @@ Suggestions on more ideomatic javascript or any other technical improvements are
 2016-05-24
 * The example now diffs fields
 * Better handling of foreign keys and primary keys
+
+2016-06-02
+* Added smarter quoting for object names
+* Added index export
+* Refactored diff calculation
+
