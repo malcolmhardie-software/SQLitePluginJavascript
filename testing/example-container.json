@@ -1,0 +1,152 @@
+[{
+    "schema": "",
+    "fields": [{
+        "properties": {
+            "defaultValue": "",
+            "notNull": "0",
+            "autoIncrement": "0",
+            "uid": "B3A54EFD-3F1C-4FBE-B09A-0F82979A9759",
+            "referenceLinkName": ""
+        },
+        "name": "id",
+        "ClassType": "SQLField",
+        "type": "CHAR"
+    }, {
+        "properties": {
+            "defaultValue": "",
+            "notNull": "0",
+            "autoIncrement": "0",
+            "uid": "26E62694-4068-4CFB-8CAF-609993CC2146",
+            "referenceLinkName": ""
+        },
+        "name": "id_1",
+        "ClassType": "SQLField",
+        "type": "CHAR"
+    }, {
+        "properties": {
+            "defaultValue": "",
+            "notNull": "0",
+            "autoIncrement": "0",
+            "uid": "87AF23F4-4FC4-457E-8324-6BFD64A65AD8",
+            "referenceLinkName": ""
+        },
+        "primaryKey": "1",
+        "name": "id_2",
+        "ClassType": "SQLField",
+        "type": "CHAR"
+    }],
+    "fullyQualifiedName": "Table1",
+    "indexes": [],
+    "ClassType": "SQLTable",
+    "constraints": [],
+    "properties": {
+        "labelWindowIndex": "2",
+        "uid": "8657865F-8ACE-4F27-91AD-EFB7415FD6ED",
+        "ui.treeExpanded": "1",
+        "otherOptions": ""
+    },
+    "primaryKeyList": ["id_2"],
+    "name": "Table1",
+    "foreignKeys": [{
+        "sourceCardinality": "0",
+        "updateAction": "0",
+        "targetTableName": "Table2",
+        "ClassType": "SQLForeignKey",
+        "destinationCardinality": "0",
+        "properties": {
+            "uid": "6DE5A0BB-BADA-4E33-B4E8-8EFEAF712125",
+            "indexNamePrefix": "Table1",
+            "targetTableName": "Table2"
+        },
+        "deleteAction": "0",
+        "targetTableUid": "E1AC0E8A-FC38-4B6C-9C6D-353AC92AC36F",
+        "name": "Table1_fk_2",
+        "fieldPairs": [{
+            "sourceFieldUid": "B3A54EFD-3F1C-4FBE-B09A-0F82979A9759",
+            "sourceFieldName": "id",
+            "targetFieldName": "id",
+            "entryIndex": "0",
+            "ClassType": "SQLForeignKeyEntry",
+            "targetFieldUid": "D78BBCFE-E276-472F-AA0C-C6D265547E36"
+        }]
+    }]
+}, {
+    "schema": "",
+    "fields": [{
+        "properties": {
+            "defaultValue": "",
+            "forcedUnique": "0",
+            "notNull": "0",
+            "uid": "D78BBCFE-E276-472F-AA0C-C6D265547E36",
+            "autoIncrement": "0",
+            "referenceLinkName": ""
+        },
+        "name": "id",
+        "ClassType": "SQLField",
+        "type": "CHAR"
+    }, {
+        "properties": {
+            "defaultValue": "",
+            "notNull": "0",
+            "autoIncrement": "0",
+            "uid": "4D9C2820-7B33-4EBA-99C6-E35C84A073A4",
+            "referenceLinkName": ""
+        },
+        "name": "id_1",
+        "ClassType": "SQLField",
+        "type": "CHAR"
+    }],
+    "indexes": [],
+    "fullyQualifiedName": "Table2",
+    "ClassType": "SQLTable",
+    "constraints": [],
+    "properties": {
+        "forcedUnique": "1",
+        "labelWindowIndex": "1",
+        "uid": "E1AC0E8A-FC38-4B6C-9C6D-353AC92AC36F",
+        "ui.treeExpanded": "1",
+        "otherOptions": ""
+    },
+    "name": "Table2",
+    "foreignKeys": []
+}, {
+    "schema": "",
+    "entries": [{
+        "name": "columns",
+        "ClassType": "SQLViewEntry",
+        "properties": {
+            "uid": "B90E29D2-9FAF-456D-B731-6E8C5E8E4D76",
+            "type": "label"
+        }
+    }, {
+        "name": "*",
+        "ClassType": "SQLViewEntry",
+        "properties": {
+            "uid": "07AA3F4C-980F-4CE4-A9CB-7C40F3B77EA4",
+            "type": "column"
+        }
+    }, {
+        "name": "tables",
+        "ClassType": "SQLViewEntry",
+        "properties": {
+            "uid": "ABC677FF-3D05-4270-A9C9-5336950D3320",
+            "type": "label"
+        }
+    }, {
+        "name": "Table1",
+        "ClassType": "SQLViewEntry",
+        "properties": {
+            "uid": "AD2E54CF-0BCB-403B-937C-6A71D5FBB303",
+            "type": "table"
+        }
+    }],
+    "properties": {
+        "queryString": "select * from Table1;",
+        "labelWindowIndex": "0",
+        "uid": "F8FE88EC-303E-4A29-B62B-53A2C38341BD",
+        "otherOptions": ""
+    },
+    "name": "View1",
+    "ClassType": "SQLView",
+    "fullyQualifiedName": "View1"
+}]

@@ -1,0 +1,37 @@
+
+CREATE TABLE Table2
+(
+id INTEGER,
+id_1 CHAR DEFAULT 'gjhgjhg',
+id_2 CHAR,
+id_3 CHAR,
+id_4 CHAR,
+PRIMARY KEY (id)
+);
+
+CREATE TABLE Table3
+(
+id CHAR UNIQUE ,
+id_1 CHAR UNIQUE ,
+id_2 CHAR,
+id_3 CHAR
+);
+
+CREATE TABLE Table1
+(
+id CHAR,
+id_1 CHAR,
+id_2 CHAR,
+id_3 CHAR
+);
+
+CREATE TABLE Table4
+(
+id CHAR
+);
+
+ALTER TABLE Table1 ADD FOREIGN KEY (id_1) REFERENCES Table3 (id);
+
+ALTER TABLE Table1 ADD FOREIGN KEY (id_2) REFERENCES Table3 (id_1);
+
+ALTER TABLE Table1 ADD FOREIGN KEY (id_3) REFERENCES Table3 (id);
