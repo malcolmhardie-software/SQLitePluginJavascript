@@ -102,3 +102,26 @@ function exportContainer(jsonContainer)
 
 }
 
+function defaultTypeForDialect(dialectName)
+{
+    
+    return "INTEGER";
+    
+}
+
+function typesListForDialect(dialectName)
+{
+    
+    var typesList = [];
+    
+    
+	typesList.push("NUMERIC")
+	typesList.push("INTEGER")
+	typesList.push("REAL")
+	typesList.push("TEXT")
+	typesList.push("BLOB")
+
+    return typesList;
+    
+}
+
