@@ -62,7 +62,9 @@ You will need to hit the manual refresh button above the source view
 
 * No database support
 * No import support
-* No dialect specific types list yet
+
+
+* Dialect specific type lists are on the way, but require SQLEditor 3.0.2 or later (not yet released)
 
 
 ### SQLEditor specific additions
